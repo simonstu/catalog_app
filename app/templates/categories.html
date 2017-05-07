@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+{% block content %}
+    <div class="row content">
+        <div class="col-md-1"></div>
+        <div class="col-md-4 padding-none">
+        <h1>Categories</h1>
+        {% for category in categories %}
+            <a href = "{{url_for('showCategory', category = category.name)}}">
+                <div class="row">
+                        <div class="col-md-10 restaurant-list">
+                            <h4>{{category.name}}</h4>
+                        </div>
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+        <div class="col-md-1 divider"></div>
+        <div class="col-md-6">
+        <h1>Latest Items</h1>
+        {% for item in latestItems %}
+            <a href = "{{url_for('showItem', category = item.category.name , item = item.name)}}">
+                <div class="row">
+                        <div class="col-md-10">
+                            <h5>{{item.name}} <span class="metaInfo">({{item.category.name}})</span></h5>
+                        </div>
+                </div>
+            </a>
+        {% endfor %}
+        <br>
+        <br>
+        {% if user %}
+            <button type="button" class=".btn-primary">
+                <a href="{{url_for('newItem')}}">+ Add new item</a>
+            </button>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

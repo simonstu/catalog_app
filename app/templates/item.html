@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+{% block content %}
+    <div class="row content">
+        <div class="col-md-1"></div>
+        <div class="col-md-4 padding-none">
+            <h1>{{selected_item.name}}</h1>
+            <span>{{selected_item.description}}</span>
+            <br>
+            <br>
+            {% if userOwnsItem %}
+            <button type="button" class=".btn-primary">
+                <a href="{{url_for('editItem', category = selected_item.category.name , item = selected_item.name)}}">Edit item</a>
+            </button>
+            <button type="button" class=".btn-primary">
+                <a href="{{url_for('deleteItem', category = selected_item.category.name , item = selected_item.name)}}">Delete item</a>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

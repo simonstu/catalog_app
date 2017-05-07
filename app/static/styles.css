@@ -1,0 +1,22 @@
+.resetButton {
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+}
+
+.loginButtonContainer {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.metaInfo {
+    color: #444444;
+    font-style: italic;
+}
+
+.top-menu {
+    background-color: #eeeeee
+}
