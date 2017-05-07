@@ -1,5 +1,5 @@
 # Catalog App Description
-Code for a Catalog App written in Python based on Flask and SQLalchemy. Users can login with their Google or Facebook accounts to add new items to the fixed set of categories. Users that are logged in can edit or delete the items they have created. User that are not logged in can only view the different items. It also possible to get the underlying data of categories and items as a JSON file.
+Code for a Catalog App written in Python based on Flask and SQLalchemy. Users can login with their Google or Facebook accounts to add new items to the fixed set of categories. Users that are logged in can edit or delete the items they have created. User that are not logged in can only view the different items. It also possible to get the underlying data of categories and items as a JSON file (e.g. at http://localhost:5000/catalog/name_of_category/JSON).
 
 # Installation
 First download or clone this repository. To start the application with some dummy data first run "python lots_of_item.py" in the app folder to fill the database.
