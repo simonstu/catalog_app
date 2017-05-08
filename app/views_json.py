@@ -17,8 +17,11 @@ def categoriesJSON():
 @app.route('/catalog/<category>/JSON')
 def itemOfCategoryJSON(category):
     category = session.query(Category).filter_by(name=category).one()
-    items = session.query(Item).filter_by(
-        category_id=category.id).order_by(desc(Item.created_at))
+    if category:
+        items = session.query(Item).filter_by(
+            category_id=category.id).order_by(desc(Item.created_at))
+    else:
+        return ""
     return jsonify(items=[i.serialize for i in items])
 
 
@@ -26,6 +29,9 @@ def itemOfCategoryJSON(category):
 @app.route('/catalog/<category>/<item>/JSON')
 def detailsOfItemJSON(category, item):
     category = session.query(Category).filter_by(name=category).one()
-    item = session.query(Item).filter_by(name=item).filter_by(
-        category_id=category.id).one()
+    if category:
+        item = session.query(Item).filter_by(name=item).filter_by(
+            category_id=category.id).one()
+    else:
+        return ""
     return jsonify(Item=item.serialize)

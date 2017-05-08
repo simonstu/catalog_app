@@ -1,4 +1,5 @@
 from database_setup import User
+from flask import render_template
 from flask import session as login_session
 
 
@@ -38,3 +39,8 @@ def userIDofLoggedInUser(session):
         return user.id
     else:
         return None
+
+
+def render(template, **params):
+    params['user'] = ('username' in login_session)
+    return render_template(template, **params)

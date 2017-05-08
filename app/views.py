@@ -13,11 +13,9 @@ from helper import *
 def showCategories():
     categories = session.query(Category).order_by(asc(Category.name))
     latestItems = session.query(Item).order_by(desc(Item.created_at)).limit(10)
-    user = userIsLoggedIn()
-    return render_template('categories.html',
-                           categories=categories,
-                           latestItems=latestItems,
-                           user=user)
+    return render('categories.html',
+                  categories=categories,
+                  latestItems=latestItems)
 
 
 # show items of a specific category
@@ -25,14 +23,13 @@ def showCategories():
 def showCategory(category):
     categories = session.query(Category).order_by(asc(Category.name))
     category = session.query(Category).filter_by(name=category).one()
-    items = session.query(Item).filter_by(
-        category_id=category.id).order_by(desc(Item.created_at))
-    user = userIsLoggedIn()
-    return render_template('category.html',
-                           categories=categories,
-                           selected_category=category,
-                           items=items,
-                           user=user)
+    if category:
+        items = session.query(Item).filter_by(
+            category_id=category.id).order_by(desc(Item.created_at))
+    return render('category.html',
+                  categories=categories,
+                  selected_category=category,
+                  items=items)
 
 
 # details of a specific item
@@ -40,16 +37,16 @@ def showCategory(category):
 def showItem(category, item):
     categories = session.query(Category).order_by(asc(Category.name))
     category = session.query(Category).filter_by(name=category).one()
-    item = session.query(Item).filter_by(name=item).filter_by(
-        category_id=category.id).one()
-    user = userIsLoggedIn()
+    if category:
+        item = session.query(Item).filter_by(name=item).filter_by(
+            category_id=category.id).one()
     userOwnsItem = userIDofLoggedInUser(session) == item.user_id
-    return render_template('item.html',
-                           categories=categories,
-                           selected_category=category,
-                           selected_item=item,
-                           userOwnsItem=userOwnsItem,
-                           user=user)
+    return render('item.html',
+                  categories=categories,
+                  selected_category=category,
+                  selected_item=item,
+                  userOwnsItem=userOwnsItem)
+
 
 # add a new item
 @app.route('/catalog/newItem', methods=['GET', 'POST'])
@@ -69,9 +66,8 @@ def newItem():
 
     else:
         categories = session.query(Category).order_by(asc(Category.name))
-        return render_template('item_new.html',
-                               categories=categories,
-                               user=user)
+        return render('item_new.html',
+                      categories=categories)
 
 
 # edit an item, if user is allowed to
@@ -80,10 +76,12 @@ def editItem(category, item):
     # check if user is logged in
     user = userIsLoggedIn()
     category = session.query(Category).filter_by(name=category).one()
-    item = session.query(Item).filter_by(name=item).filter_by(
-        category_id=category.id).one()
-    # check if user created teh item he wants to edit
-    userOwnsItem = userIDofLoggedInUser(session) == item.user_id
+    if category:
+        item = session.query(Item).filter_by(name=item).filter_by(
+            category_id=category.id).one()
+    # check if user created the item he wants to edit
+    if item:
+        userOwnsItem = userIDofLoggedInUser(session) == item.user_id
     if not user or not userOwnsItem:
         return redirect(url_for('showCategories'))
     # change item as user edited it
@@ -100,11 +98,10 @@ def editItem(category, item):
     # show form to edit this item as user owns it
     else:
         categories = session.query(Category).order_by(asc(Category.name))
-        return render_template('item_edit.html',
-                               categories=categories,
-                               previous_category=category,
-                               item=item,
-                               user=user)
+        return render('item_edit.html',
+                      categories=categories,
+                      previous_category=category,
+                      item=item)
 
 
 # delete an item, if user is allowed to
@@ -113,10 +110,12 @@ def deleteItem(category, item):
     # check if user is logged in
     user = userIsLoggedIn()
     category = session.query(Category).filter_by(name=category).one()
-    item = session.query(Item).filter_by(name=item).filter_by(
-        category_id=category.id).one()
+    if category:
+        item = session.query(Item).filter_by(name=item).filter_by(
+            category_id=category.id).one()
     # check if user created the item he wants to delete
-    userOwnsItem = userIDofLoggedInUser(session) == item.user_id
+    if item:
+        userOwnsItem = userIDofLoggedInUser(session) == item.user_id
     if not user or not userOwnsItem:
         return redirect(url_for('showCategories'))
     if request.method == 'POST':
@@ -125,7 +124,6 @@ def deleteItem(category, item):
         return redirect(url_for('showCategories'))
     # ask user if he really wants to delete this item
     else:
-        return render_template('item_delete.html',
-                               category=category,
-                               item=item,
-                               user=user)
+        return render('item_delete.html',
+                      category=category,
+                      item=item)
